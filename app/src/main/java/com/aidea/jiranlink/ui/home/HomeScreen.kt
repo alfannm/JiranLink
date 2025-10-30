@@ -11,11 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.huawei.agconnect.auth.AGConnectUser
 
 @Composable
 fun HomeScreen(
-    user: AGConnectUser,
+    user: String,
     lastUploadUrl: String?,
     onPickImage: (Uri) -> Unit,
     onSignOut: () -> Unit
@@ -27,11 +26,17 @@ fun HomeScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(20.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Welcome, ${user.email ?: user.uid}", style = MaterialTheme.typography.titleLarge)
+        Text(
+            text = "Welcome, $user 👋",
+            style = MaterialTheme.typography.titleLarge
+        )
+
         if (lastUploadUrl != null) {
             Text(
                 text = "Last uploaded URL:\n$lastUploadUrl",
@@ -39,12 +44,17 @@ fun HomeScreen(
                 overflow = TextOverflow.Ellipsis
             )
         }
+
         Button(onClick = {
             pickMedia.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
-        }) { Text("Upload an image to Cloud Storage") }
+        }) {
+            Text("Upload an image to Cloud Storage")
+        }
 
-        OutlinedButton(onClick = onSignOut) { Text("Sign out") }
+        OutlinedButton(onClick = onSignOut) {
+            Text("Sign out")
+        }
     }
 }

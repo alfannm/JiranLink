@@ -4,8 +4,6 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.huawei.agconnect.auth.AGConnectAuth
-import com.huawei.agconnect.auth.AGConnectUser
 import com.huawei.agconnect.cloud.storage.core.AGCStorageManagement
 import com.huawei.agconnect.cloud.storage.core.StorageReference
 import com.huawei.agconnect.cloud.storage.core.UploadTask
@@ -17,29 +15,27 @@ import java.util.UUID
 
 class AuthViewModel : ViewModel() {
 
-    private val _user = MutableStateFlow<AGConnectUser?>(null)
-    val user: StateFlow<AGConnectUser?> = _user
+    private val _user = MutableStateFlow<String?>(null)
+    val user: StateFlow<String?> = _user
 
     private val _lastUploadUrl = MutableStateFlow<String?>(null)
     val lastUploadUrl: StateFlow<String?> = _lastUploadUrl
 
-    fun loadCurrentUser() {
+    fun mockSignIn() {
         viewModelScope.launch {
-            _user.value = AGConnectAuth.getInstance().currentUser
+            _user.value = "mock_user_123"
         }
     }
 
     fun signOut() {
         viewModelScope.launch {
-            AGConnectAuth.getInstance().signOut()
             _user.value = null
             _lastUploadUrl.value = null
         }
     }
 
     fun uploadImageToCloudStorage(context: Context, fileUri: Uri) {
-        val current = AGConnectAuth.getInstance().currentUser
-        val uid = current?.uid ?: "anonymous"
+        val uid = _user.value ?: "anonymous"
         val fileName = "${UUID.randomUUID()}.jpg"
         val path = "users/$uid/images/$fileName"
 
