@@ -31,7 +31,7 @@ agconnect-database = {module = "com.huawei.agconnect:agconnect-cloud-database", 
 agconnect-storage = {module = "com.huawei.agconnect:agconnect-storage", version.ref = "agcVersion"}
 agconnect-applinking = {module = "com.huawei.agconnect:agconnect-applinking", version.ref = "agcVersion"}
 agconnect-auth = { module = "com.huawei.agconnect:agconnect-auth", version.ref = "agcVersion" }
-hms-account = { module = "com.huawei.hms:hwid", version = "hmsVersion" }
+hms-account = { module = "com.huawei.hms:hwid", version.ref = "hmsVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
