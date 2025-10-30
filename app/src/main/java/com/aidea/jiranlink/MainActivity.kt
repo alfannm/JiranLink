@@ -1,5 +1,6 @@
 package com.aidea.jiranlink
 
+import android.util.Log
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -25,7 +26,6 @@ import com.huawei.hms.support.hwid.result.AuthHuaweiId
 import com.huawei.hms.support.hwid.service.HuaweiIdAuthService
 import com.huawei.hms.support.account.request.AccountAuthParams
 import com.huawei.hms.support.account.service.AccountAuthService
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,18 +53,47 @@ fun LoginScreen() {
             val authHuaweiIdTask = HuaweiIdAuthManager.parseAuthResultFromIntent(result.data)
             if (authHuaweiIdTask.isSuccessful) {
                 val huaweiId: AuthHuaweiId = authHuaweiIdTask.result
-                val authCode = huaweiId.authorizationCode // safer replacement for accessToken
+                val authCode = huaweiId.authorizationCode
+                Log.d("HMSAuth", "Auth Code: ${huaweiId.authorizationCode ?: "null"}")
+                val idToken = huaweiId.idToken
+                Log.d("HMSAuth", "ID Token: ${huaweiId.idToken ?: "null"}")
 
-                // Sign in with AGConnect using Huawei ID
-                val credential = HwIdAuthProvider.credentialWithToken(authCode)
-                AGConnectAuth.getInstance().signIn(credential)
-                    .addOnSuccessListener {
-                        val user: AGConnectUser? = it.user
-                        status = "Signed in as: ${user?.email ?: user?.uid}"
-                    }
-                    .addOnFailureListener { e ->
-                        status = "Sign-in failed: ${e.message}"
-                    }
+//                if (idToken == null) {
+//                    status = "Running on emulator: skipping real sign-in"
+//                } else {
+//                    val credential = HwIdAuthProvider.credentialWithToken(idToken)
+//                    AGConnectAuth.getInstance().signIn(credential)
+//                        .addOnSuccessListener {
+//                            val user: AGConnectUser? = it.user
+//                            status = "Signed in as: ${user?.email ?: user?.uid}"
+//                        }
+//                        .addOnFailureListener { e ->
+//                            status = "Sign-in failed: ${e.message}"
+//                        }
+//                }
+
+                if (idToken == null || android.os.Build.FINGERPRINT.contains("generic")) {
+                    // Emulator or non-Huawei device fallback
+                    status = "Running on emulator — using mock login."
+                    val mockUserId = "mock_user_12345"
+                    val mockEmail = "mockuser@huawei.com"
+                    status = "Signed in as: $mockEmail (Emulated)"
+                    Log.d("HMSAuth", "Mock sign-in success for emulator user: $mockUserId")
+                } else {
+                    // Real device login with AGConnectAuth
+                    val credential = HwIdAuthProvider.credentialWithToken(idToken)
+                    AGConnectAuth.getInstance().signIn(credential)
+                        .addOnSuccessListener {
+                            val user: AGConnectUser? = it.user
+                            status = "Signed in as: ${user?.email ?: user?.uid}"
+                        }
+                        .addOnFailureListener { e ->
+                            status = "Sign-in failed: ${e.message}"
+                            Log.e("AGCAuth", "Sign-in failed", e)
+                        }
+                }
+
+
             } else {
                 status = "Auth failed: ${authHuaweiIdTask.exception?.message}"
             }
