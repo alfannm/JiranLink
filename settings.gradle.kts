@@ -18,6 +18,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven(url = "https://developer.huawei.com/repo/")
+        maven(url = "https://maven.aliyun.com/repository/public" )
     }
 }
 

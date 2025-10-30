@@ -55,6 +55,8 @@ dependencies {
     implementation (libs.agconnect.database)
     implementation (libs.agconnect.applinking)
     implementation (libs.agconnect.storage)
+    implementation(libs.hms.account)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

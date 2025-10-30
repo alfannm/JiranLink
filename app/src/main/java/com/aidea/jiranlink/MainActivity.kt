@@ -3,27 +3,25 @@ package com.aidea.jiranlink
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.aidea.jiranlink.ui.theme.JiranLinkTheme
+import androidx.compose.ui.unit.dp
+import com.huawei.agconnect.auth.AGConnectAuth
+import com.huawei.agconnect.auth.SignInResult
+import com.huawei.agconnect.auth.HuaweiIdAuthProvider
+import com.huawei.agconnect.auth.AGConnectAuthException
+import com.huawei.agconnect.auth.AGConnectUser
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            JiranLinkTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            MaterialTheme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    LoginScreen()
                 }
             }
         }
@@ -31,17 +29,36 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun LoginScreen() {
+    var status by remember { mutableStateOf("Not signed in") }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    JiranLinkTheme {
-        Greeting("Android")
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = status)
+        Spacer(modifier = Modifier.height(20.dp))
+        Button(onClick = {
+            try {
+                val credential = HuaweiIdAuthProvider.credentialWithToken("<token>")
+                AGConnectAuth.getInstance().signIn(credential)
+                    .addOnSuccessListener { signInResult: SignInResult ->
+                        val user: AGConnectUser? = signInResult.user
+                        status = "Signed in as: ${user?.uid}"
+                    }
+                    .addOnFailureListener { e: Exception ->
+                        if (e is AGConnectAuthException) {
+                            status = "Error: ${e.message}"
+                        } else {
+                            status = "Sign-in failed"
+                        }
+                    }
+            } catch (e: Exception) {
+                status = "Exception: ${e.message}"
+            }
+        }) {
+            Text("Sign in with Huawei ID")
+        }
     }
 }

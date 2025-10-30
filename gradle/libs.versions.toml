@@ -8,7 +8,9 @@ espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2024.09.00"
-agcVersion = "1.9.4.300"
+agcVersion = "1.9.3.302"
+hmsVersion = "6.12.0.300"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +31,7 @@ agconnect-database = {module = "com.huawei.agconnect:agconnect-cloud-database", 
 agconnect-storage = {module = "com.huawei.agconnect:agconnect-storage", version.ref = "agcVersion"}
 agconnect-applinking = {module = "com.huawei.agconnect:agconnect-applinking", version.ref = "agcVersion"}
 agconnect-auth = { module = "com.huawei.agconnect:agconnect-auth", version.ref = "agcVersion" }
+hms-account = { module = "com.huawei.hms:hwid", version = "hmsVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
