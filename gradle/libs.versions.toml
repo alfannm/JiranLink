@@ -11,7 +11,6 @@ composeBom = "2024.09.00"
 agcVersion = "1.9.3.302"
 hmsVersion = "6.12.0.300"
 
-
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -28,10 +27,11 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 agconnect-database = {module = "com.huawei.agconnect:agconnect-cloud-database", version.ref = "agcVersion"}
-agconnect-storage = {module = "com.huawei.agconnect:agconnect-storage", version.ref = "agcVersion"}
+agconnect-storage = { module = "com.huawei.agconnect:agconnect-storage", version = "1.9.1.300" }
 agconnect-applinking = {module = "com.huawei.agconnect:agconnect-applinking", version.ref = "agcVersion"}
 agconnect-auth = { module = "com.huawei.agconnect:agconnect-auth", version.ref = "agcVersion" }
 hms-account = { module = "com.huawei.hms:hwid", version.ref = "hmsVersion" }
+agconnect-auth-huawei = { module = "com.huawei.agconnect:agconnect-auth-huawei", version.ref = "agcVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.agcp) // ✅ this applies com.huawei.agconnect
+    alias(libs.plugins.agcp)
 }
 
 android {
@@ -65,6 +65,8 @@ dependencies {
 
     // --- ✅ HMS Core Installer SDK (auto prompt for installation) ---
     implementation("com.huawei.hms:hmscoreinstaller:6.11.0.301")
+
+    implementation(libs.agconnect.auth.huawei)
 
     // --- Testing ---
     testImplementation(libs.junit)
