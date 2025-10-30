@@ -2,14 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.agcp)
+    alias(libs.plugins.agcp) // ✅ this applies com.huawei.agconnect
 }
 
 android {
     namespace = "com.aidea.jiranlink"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.aidea.jiranlink"
@@ -30,19 +28,23 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
 }
 
 dependencies {
+    // --- AndroidX & Compose ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -51,12 +53,20 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation (libs.agconnect.auth)
-    implementation (libs.agconnect.database)
-    implementation (libs.agconnect.applinking)
-    implementation (libs.agconnect.storage)
+
+    // --- Huawei AGConnect SDKs ---
+    implementation(libs.agconnect.auth)
+    implementation(libs.agconnect.database)
+    implementation(libs.agconnect.applinking)
+    implementation(libs.agconnect.storage)
+
+    // --- Huawei HMS Account SDK ---
     implementation(libs.hms.account)
 
+    // --- ✅ HMS Core Installer SDK (auto prompt for installation) ---
+    implementation("com.huawei.hms:hmscoreinstaller:6.11.0.301")
+
+    // --- Testing ---
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -64,6 +74,4 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-
 }
